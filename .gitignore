@@ -9,3 +9,7 @@ DerivedData/
 # Xcode user data (do not commit)
 *.xcuserstate
 *.xcuserdata/
+
+# Xcode user-specific files
+*.xcuserdata/
+*.xcuserstate
