@@ -5,3 +5,7 @@ DerivedData/
 *.xcscmblueprint
 .build/
 .swiftpm/
+
+# Xcode user data (do not commit)
+*.xcuserstate
+*.xcuserdata/
