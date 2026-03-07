@@ -6,9 +6,72 @@
 	objectVersion = 77;
 	objects = {
 
+/* Begin PBXBuildFile section */
+		54C9D7512F5AA581004B2677 /* EndurOS Companion Watch Watch App.app in Embed Watch Content */ = {isa = PBXBuildFile; fileRef = 54C9D7472F5AA580004B2677 /* EndurOS Companion Watch Watch App.app */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
+/* End PBXBuildFile section */
+
+/* Begin PBXContainerItemProxy section */
+		54C9D74F2F5AA581004B2677 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 545F652A2F58DBA8009FD3B6 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 54C9D7462F5AA580004B2677;
+			remoteInfo = "EndurOS Companion Watch Watch App";
+		};
+/* End PBXContainerItemProxy section */
+
+/* Begin PBXCopyFilesBuildPhase section */
+		54C9D7552F5AA581004B2677 /* Embed Watch Content */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "$(CONTENTS_FOLDER_PATH)/Watch";
+			dstSubfolderSpec = 16;
+			files = (
+				54C9D7512F5AA581004B2677 /* EndurOS Companion Watch Watch App.app in Embed Watch Content */,
+			);
+			name = "Embed Watch Content";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXCopyFilesBuildPhase section */
+
 /* Begin PBXFileReference section */
-		545F65322F58DBA9009FD3B6 /* EndurOS Watch App.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "EndurOS Watch App.app"; sourceTree = BUILT_PRODUCTS_DIR; };
+		54C9D6CC2F58E3C2004B2677 /* EndurOS Watch App.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "EndurOS Watch App.app"; sourceTree = BUILT_PRODUCTS_DIR; };
+		54C9D7212F5A8972004B2677 /* EndurOS iPhone.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "EndurOS iPhone.app"; sourceTree = BUILT_PRODUCTS_DIR; };
+		54C9D7472F5AA580004B2677 /* EndurOS Companion Watch Watch App.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "EndurOS Companion Watch Watch App.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
+
+/* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
+		54C9D7572F5AA5DE004B2677 /* Exceptions for "Views" folder in "EndurOS Watch App" target */ = {
+			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
+			membershipExceptions = (
+				ContentView.swift,
+			);
+			target = 545F65312F58DBA8009FD3B6 /* EndurOS Watch App */;
+		};
+		54C9D7582F5AA5DE004B2677 /* Exceptions for "Views" folder in "EndurOS Companion Watch Watch App" target */ = {
+			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
+			membershipExceptions = (
+				ContentView.swift,
+			);
+			target = 54C9D7462F5AA580004B2677 /* EndurOS Companion Watch Watch App */;
+		};
+		54C9D75A2F5AA5EB004B2677 /* Exceptions for "Config" folder in "EndurOS Watch App" target */ = {
+			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
+			membershipExceptions = (
+				LocationManager.swift,
+				WorkoutManager.swift,
+			);
+			target = 545F65312F58DBA8009FD3B6 /* EndurOS Watch App */;
+		};
+		54C9D75B2F5AA5EB004B2677 /* Exceptions for "Config" folder in "EndurOS Companion Watch Watch App" target */ = {
+			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
+			membershipExceptions = (
+				LocationManager.swift,
+				WorkoutManager.swift,
+			);
+			target = 54C9D7462F5AA580004B2677 /* EndurOS Companion Watch Watch App */;
+		};
+/* End PBXFileSystemSynchronizedBuildFileExceptionSet section */
 
 /* Begin PBXFileSystemSynchronizedRootGroup section */
 		545F65342F58DBA9009FD3B6 /* EndurOS Watch App */ = {
@@ -16,10 +79,52 @@
 			path = "EndurOS Watch App";
 			sourceTree = "<group>";
 		};
+		54C9D6C42F58E246004B2677 /* Views */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			exceptions = (
+				54C9D7572F5AA5DE004B2677 /* Exceptions for "Views" folder in "EndurOS Watch App" target */,
+				54C9D7582F5AA5DE004B2677 /* Exceptions for "Views" folder in "EndurOS Companion Watch Watch App" target */,
+			);
+			path = Views;
+			sourceTree = "<group>";
+		};
+		54C9D6C82F58E2AF004B2677 /* Config */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			exceptions = (
+				54C9D75A2F5AA5EB004B2677 /* Exceptions for "Config" folder in "EndurOS Watch App" target */,
+				54C9D75B2F5AA5EB004B2677 /* Exceptions for "Config" folder in "EndurOS Companion Watch Watch App" target */,
+			);
+			path = Config;
+			sourceTree = "<group>";
+		};
+		54C9D7222F5A8972004B2677 /* EndurOS iPhone */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			path = "EndurOS iPhone";
+			sourceTree = "<group>";
+		};
+		54C9D7482F5AA580004B2677 /* EndurOS Companion Watch Watch App */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			path = "EndurOS Companion Watch Watch App";
+			sourceTree = "<group>";
+		};
 /* End PBXFileSystemSynchronizedRootGroup section */
 
 /* Begin PBXFrameworksBuildPhase section */
 		545F652F2F58DBA8009FD3B6 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		54C9D71E2F5A8972004B2677 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		54C9D7442F5AA580004B2677 /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -33,16 +138,14 @@
 			isa = PBXGroup;
 			children = (
 				545F65342F58DBA9009FD3B6 /* EndurOS Watch App */,
-				545F65332F58DBA9009FD3B6 /* Products */,
+				54C9D6C42F58E246004B2677 /* Views */,
+				54C9D6C82F58E2AF004B2677 /* Config */,
+				54C9D6CC2F58E3C2004B2677 /* EndurOS Watch App.app */,
+				54C9D7212F5A8972004B2677 /* EndurOS iPhone.app */,
+				54C9D7222F5A8972004B2677 /* EndurOS iPhone */,
+				54C9D7472F5AA580004B2677 /* EndurOS Companion Watch Watch App.app */,
+				54C9D7482F5AA580004B2677 /* EndurOS Companion Watch Watch App */,
 			);
-			sourceTree = "<group>";
-		};
-		545F65332F58DBA9009FD3B6 /* Products */ = {
-			isa = PBXGroup;
-			children = (
-				545F65322F58DBA9009FD3B6 /* EndurOS Watch App.app */,
-			);
-			name = Products;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -62,12 +165,60 @@
 			);
 			fileSystemSynchronizedGroups = (
 				545F65342F58DBA9009FD3B6 /* EndurOS Watch App */,
+				54C9D6C42F58E246004B2677 /* Views */,
+				54C9D6C82F58E2AF004B2677 /* Config */,
 			);
 			name = "EndurOS Watch App";
 			packageProductDependencies = (
 			);
 			productName = "EndurOS Watch App";
-			productReference = 545F65322F58DBA9009FD3B6 /* EndurOS Watch App.app */;
+			productReference = 54C9D6CC2F58E3C2004B2677 /* EndurOS Watch App.app */;
+			productType = "com.apple.product-type.application";
+		};
+		54C9D7202F5A8972004B2677 /* EndurOS iPhone */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 54C9D72B2F5A8973004B2677 /* Build configuration list for PBXNativeTarget "EndurOS iPhone" */;
+			buildPhases = (
+				54C9D71D2F5A8972004B2677 /* Sources */,
+				54C9D71E2F5A8972004B2677 /* Frameworks */,
+				54C9D71F2F5A8972004B2677 /* Resources */,
+				54C9D7552F5AA581004B2677 /* Embed Watch Content */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				54C9D7502F5AA581004B2677 /* PBXTargetDependency */,
+			);
+			fileSystemSynchronizedGroups = (
+				54C9D7222F5A8972004B2677 /* EndurOS iPhone */,
+			);
+			name = "EndurOS iPhone";
+			packageProductDependencies = (
+			);
+			productName = "EndurOS iPhone";
+			productReference = 54C9D7212F5A8972004B2677 /* EndurOS iPhone.app */;
+			productType = "com.apple.product-type.application";
+		};
+		54C9D7462F5AA580004B2677 /* EndurOS Companion Watch Watch App */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 54C9D7522F5AA581004B2677 /* Build configuration list for PBXNativeTarget "EndurOS Companion Watch Watch App" */;
+			buildPhases = (
+				54C9D7432F5AA580004B2677 /* Sources */,
+				54C9D7442F5AA580004B2677 /* Frameworks */,
+				54C9D7452F5AA580004B2677 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			fileSystemSynchronizedGroups = (
+				54C9D7482F5AA580004B2677 /* EndurOS Companion Watch Watch App */,
+			);
+			name = "EndurOS Companion Watch Watch App";
+			packageProductDependencies = (
+			);
+			productName = "EndurOS Companion Watch Watch App";
+			productReference = 54C9D7472F5AA580004B2677 /* EndurOS Companion Watch Watch App.app */;
 			productType = "com.apple.product-type.application";
 		};
 /* End PBXNativeTarget section */
@@ -83,6 +234,12 @@
 					545F65312F58DBA8009FD3B6 = {
 						CreatedOnToolsVersion = 26.0;
 					};
+					54C9D7202F5A8972004B2677 = {
+						CreatedOnToolsVersion = 26.0;
+					};
+					54C9D7462F5AA580004B2677 = {
+						CreatedOnToolsVersion = 26.0;
+					};
 				};
 			};
 			buildConfigurationList = 545F652D2F58DBA8009FD3B6 /* Build configuration list for PBXProject "EndurOS" */;
@@ -95,17 +252,33 @@
 			mainGroup = 545F65292F58DBA8009FD3B6;
 			minimizedProjectReferenceProxies = 1;
 			preferredProjectObjectVersion = 77;
-			productRefGroup = 545F65332F58DBA9009FD3B6 /* Products */;
+			productRefGroup = 545F65292F58DBA8009FD3B6;
 			projectDirPath = "";
 			projectRoot = "";
 			targets = (
 				545F65312F58DBA8009FD3B6 /* EndurOS Watch App */,
+				54C9D7202F5A8972004B2677 /* EndurOS iPhone */,
+				54C9D7462F5AA580004B2677 /* EndurOS Companion Watch Watch App */,
 			);
 		};
 /* End PBXProject section */
 
 /* Begin PBXResourcesBuildPhase section */
 		545F65302F58DBA8009FD3B6 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		54C9D71F2F5A8972004B2677 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		54C9D7452F5AA580004B2677 /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -122,7 +295,29 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		54C9D71D2F5A8972004B2677 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		54C9D7432F5AA580004B2677 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		54C9D7502F5AA581004B2677 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 54C9D7462F5AA580004B2677 /* EndurOS Companion Watch Watch App */;
+			targetProxy = 54C9D74F2F5AA581004B2677 /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
 
 /* Begin XCBuildConfiguration section */
 		545F653B2F58DBAA009FD3B6 /* Debug */ = {
@@ -246,20 +441,25 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_ENTITLEMENTS = "EndurOS Watch App/EndurOS Watch App.entitlements";
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = RR2SM3NWCN;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = "EndurOS-Watch-App-Info.plist";
 				INFOPLIST_KEY_CFBundleDisplayName = EndurOS;
+				INFOPLIST_KEY_NSHealthClinicalHealthRecordsShareUsageDescription = "";
+				INFOPLIST_KEY_NSHealthShareUsageDescription = "EndurOS reads health metrics like heart rate during workouts to calculate performance load.";
+				INFOPLIST_KEY_NSHealthUpdateUsageDescription = "EndurOS saves workout sessions to Health so your training history is complete.";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown";
-				INFOPLIST_KEY_WKCompanionAppBundleIdentifier = "";
+				INFOPLIST_KEY_WKCompanionAppBundleIdentifier = com.tylerbuchanan.enduros;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = .watchkitapp;
+				PRODUCT_BUNDLE_IDENTIFIER = com.tylerbuchanan.enduros.watch;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = watchos;
 				SKIP_INSTALL = YES;
@@ -278,20 +478,165 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_ENTITLEMENTS = "EndurOS Watch App/EndurOS Watch App.entitlements";
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = RR2SM3NWCN;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = "EndurOS-Watch-App-Info.plist";
 				INFOPLIST_KEY_CFBundleDisplayName = EndurOS;
+				INFOPLIST_KEY_NSHealthClinicalHealthRecordsShareUsageDescription = "";
+				INFOPLIST_KEY_NSHealthShareUsageDescription = "EndurOS reads health metrics like heart rate during workouts to calculate performance load.";
+				INFOPLIST_KEY_NSHealthUpdateUsageDescription = "EndurOS saves workout sessions to Health so your training history is complete.";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown";
-				INFOPLIST_KEY_WKCompanionAppBundleIdentifier = "";
+				INFOPLIST_KEY_WKCompanionAppBundleIdentifier = com.tylerbuchanan.enduros;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = .watchkitapp;
+				PRODUCT_BUNDLE_IDENTIFIER = com.tylerbuchanan.enduros.watch;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = watchos;
+				SKIP_INSTALL = YES;
+				STRING_CATALOG_GENERATE_SYMBOLS = YES;
+				SWIFT_DEFAULT_ACTOR_ISOLATION = MainActor;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = 4;
+				VALIDATE_PRODUCT = YES;
+				WATCHOS_DEPLOYMENT_TARGET = 26.0;
+			};
+			name = Release;
+		};
+		54C9D7292F5A8973004B2677 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_ENTITLEMENTS = "EndurOS iPhone/EndurOS iPhone.entitlements";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = RR2SM3NWCN;
+				ENABLE_PREVIEWS = YES;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = "EndurOS-iPhone-Info.plist";
+				INFOPLIST_KEY_NSContactsUsageDescription = "EndurOS uses your contacts to help you find and invite friends.";
+				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
+				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
+				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown";
+				IPHONEOS_DEPLOYMENT_TARGET = 26.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.tylerbuchanan.enduros;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = iphoneos;
+				STRING_CATALOG_GENERATE_SYMBOLS = YES;
+				SWIFT_DEFAULT_ACTOR_ISOLATION = MainActor;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		54C9D72A2F5A8973004B2677 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_ENTITLEMENTS = "EndurOS iPhone/EndurOS iPhone.entitlements";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = RR2SM3NWCN;
+				ENABLE_PREVIEWS = YES;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = "EndurOS-iPhone-Info.plist";
+				INFOPLIST_KEY_NSContactsUsageDescription = "EndurOS uses your contacts to help you find and invite friends.";
+				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
+				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
+				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown";
+				IPHONEOS_DEPLOYMENT_TARGET = 26.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.tylerbuchanan.enduros;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = iphoneos;
+				STRING_CATALOG_GENERATE_SYMBOLS = YES;
+				SWIFT_DEFAULT_ACTOR_ISOLATION = MainActor;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				VALIDATE_PRODUCT = YES;
+			};
+			name = Release;
+		};
+		54C9D7532F5AA581004B2677 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = RR2SM3NWCN;
+				ENABLE_PREVIEWS = YES;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_CFBundleDisplayName = "EndurOS Companion Watch";
+				INFOPLIST_KEY_NSHealthShareUsageDescription = "EndurOS reads health metrics during workouts.";
+				INFOPLIST_KEY_NSHealthUpdateUsageDescription = "EndurOS saves workout sessions to Health.";
+				INFOPLIST_KEY_UISupportedInterfaceOrientations = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown";
+				INFOPLIST_KEY_WKCompanionAppBundleIdentifier = com.tylerbuchanan.enduros;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.tylerbuchanan.enduros.watchkitapp;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = watchos;
+				SKIP_INSTALL = YES;
+				STRING_CATALOG_GENERATE_SYMBOLS = YES;
+				SWIFT_DEFAULT_ACTOR_ISOLATION = MainActor;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = 4;
+				WATCHOS_DEPLOYMENT_TARGET = 26.0;
+			};
+			name = Debug;
+		};
+		54C9D7542F5AA581004B2677 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = RR2SM3NWCN;
+				ENABLE_PREVIEWS = YES;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_CFBundleDisplayName = "EndurOS Companion Watch";
+				INFOPLIST_KEY_NSHealthShareUsageDescription = "EndurOS reads health metrics during workouts.";
+				INFOPLIST_KEY_NSHealthUpdateUsageDescription = "EndurOS saves workout sessions to Health.";
+				INFOPLIST_KEY_UISupportedInterfaceOrientations = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown";
+				INFOPLIST_KEY_WKCompanionAppBundleIdentifier = com.tylerbuchanan.enduros;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.tylerbuchanan.enduros.watchkitapp;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = watchos;
 				SKIP_INSTALL = YES;
@@ -323,6 +668,24 @@
 			buildConfigurations = (
 				545F653E2F58DBAA009FD3B6 /* Debug */,
 				545F653F2F58DBAA009FD3B6 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		54C9D72B2F5A8973004B2677 /* Build configuration list for PBXNativeTarget "EndurOS iPhone" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				54C9D7292F5A8973004B2677 /* Debug */,
+				54C9D72A2F5A8973004B2677 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		54C9D7522F5AA581004B2677 /* Build configuration list for PBXNativeTarget "EndurOS Companion Watch Watch App" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				54C9D7532F5AA581004B2677 /* Debug */,
+				54C9D7542F5AA581004B2677 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;

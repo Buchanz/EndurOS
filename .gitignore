@@ -5,6 +5,13 @@ DerivedData/
 *.xcscmblueprint
 .build/
 .swiftpm/
+*.app/
+*.dSYM/
+*.dSYM.zip
+*.ipa
+xcuserdata/
+*.moved-aside
+*.pbxuser
 
 # Xcode user data (do not commit)
 *.xcuserstate
