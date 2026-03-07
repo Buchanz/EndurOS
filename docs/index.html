@@ -1,0 +1,71 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>EndurOS Auth Redirect</title>
+    <style>
+      :root {
+        color-scheme: dark;
+      }
+      body {
+        margin: 0;
+        min-height: 100vh;
+        display: grid;
+        place-items: center;
+        background: radial-gradient(circle at top, #1f2340, #0f1016 55%);
+        color: #f5f5f7;
+        font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", "Segoe UI", sans-serif;
+      }
+      .card {
+        width: min(520px, 92vw);
+        padding: 28px;
+        border-radius: 20px;
+        background: rgba(255, 255, 255, 0.06);
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        box-shadow: 0 30px 60px rgba(0, 0, 0, 0.35);
+      }
+      h1 {
+        margin: 0 0 10px;
+        font-size: clamp(1.5rem, 3vw, 2rem);
+      }
+      p {
+        margin: 0;
+        color: rgba(245, 245, 247, 0.82);
+        line-height: 1.5;
+      }
+      .ok {
+        color: #a5ff4f;
+        font-weight: 700;
+      }
+      .small {
+        margin-top: 14px;
+        font-size: 0.9rem;
+        color: rgba(245, 245, 247, 0.6);
+      }
+      code {
+        color: #b7c3ff;
+      }
+    </style>
+  </head>
+  <body>
+    <main class="card">
+      <h1>EndurOS</h1>
+      <p class="ok" id="status">Email verification complete.</p>
+      <p id="message">You can return to the EndurOS app and log in.</p>
+      <p class="small">If this page was opened by mistake, you can close it safely.</p>
+    </main>
+
+    <script>
+      const hash = window.location.hash || "";
+      const params = new URLSearchParams(hash.startsWith("#") ? hash.slice(1) : hash);
+      const error = params.get("error_description") || params.get("error");
+
+      if (error) {
+        document.getElementById("status").textContent = "Verification link had an issue.";
+        document.getElementById("status").classList.remove("ok");
+        document.getElementById("message").textContent = decodeURIComponent(error);
+      }
+    </script>
+  </body>
+</html>
