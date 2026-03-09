@@ -12,11 +12,20 @@ import Combine
 @main
 struct EndurOS_iPhoneApp: App {
     @StateObject private var sync = PhoneSyncManager()
+    @StateObject private var auth = AuthSessionManager()
 
     var body: some Scene {
         WindowGroup {
-            ContentView()
-                .environmentObject(sync)
+            Group {
+                if auth.isSignedIn {
+                    ContentView()
+                        .environmentObject(sync)
+                        .environmentObject(auth)
+                } else {
+                    AuthEntryView()
+                        .environmentObject(auth)
+                }
+            }
         }
     }
 }
@@ -31,12 +40,13 @@ final class PhoneSyncManager: NSObject, ObservableObject, WCSessionDelegate {
     @Published private(set) var apiBaseURL: String = ""
     @Published private(set) var recentSessions: [BackendSession] = []
 
-    private let defaultAthleteId = "e00652ef-a2d2-475f-84a1-ed12daa9c971"
+    private let defaultAthleteId = ""
     private let defaultAPIBaseURL = "http://localhost:4000/api"
     private let queueKey = "phone_sync_queue_v1"
     private let recentSessionsKey = "phone_recent_sessions_v1"
     private let athleteIdKey = "phone_sync_athlete_id_v1"
     private let apiBaseURLKey = "phone_sync_api_base_url_v1"
+    private let authTokenKey = "auth_access_token_v1"
     private let appGroupID = "group.com.tylerbuchanan.enduros"
     private var queue: [QueuedSessionUpload] = []
     private var retryTask: Task<Void, Never>?
@@ -175,10 +185,6 @@ final class PhoneSyncManager: NSObject, ObservableObject, WCSessionDelegate {
     private func processQueueIfNeeded(force: Bool = false) async {
         if isUploading && !force { return }
         guard !queue.isEmpty else { return }
-        guard !athleteId.isEmpty else {
-            lastStatus = "Missing athlete ID"
-            return
-        }
         guard !apiBaseURL.isEmpty else {
             lastStatus = "Missing API base URL"
             return
@@ -214,7 +220,6 @@ final class PhoneSyncManager: NSObject, ObservableObject, WCSessionDelegate {
     private func uploadSummary(_ payload: WatchSessionUploadPayload) async throws {
         let body: [String: Any] = [
             "sessionId": payload.sessionId,
-            "athleteId": athleteId,
             "sport": payload.sport,
             "startedAt": isoString(payload.startedAt),
             "endedAt": isoString(payload.endedAt),
@@ -235,6 +240,7 @@ final class PhoneSyncManager: NSObject, ObservableObject, WCSessionDelegate {
         var request = URLRequest(url: try url("\(apiBaseURL)/sessions"))
         request.httpMethod = "POST"
         request.setValue("application/json", forHTTPHeaderField: "Content-Type")
+        request.setValue("Bearer \(try accessToken())", forHTTPHeaderField: "Authorization")
         request.httpBody = try JSONSerialization.data(withJSONObject: body)
 
         let (_, response) = try await URLSession.shared.data(for: request)
@@ -260,6 +266,7 @@ final class PhoneSyncManager: NSObject, ObservableObject, WCSessionDelegate {
         var request = URLRequest(url: try url("\(apiBaseURL)/sessions/\(payload.sessionId)/samples"))
         request.httpMethod = "POST"
         request.setValue("application/json", forHTTPHeaderField: "Content-Type")
+        request.setValue("Bearer \(try accessToken())", forHTTPHeaderField: "Authorization")
         request.httpBody = try JSONSerialization.data(withJSONObject: body)
 
         let (_, response) = try await URLSession.shared.data(for: request)
@@ -367,11 +374,12 @@ final class PhoneSyncManager: NSObject, ObservableObject, WCSessionDelegate {
     }
 
     private func refreshSessions() async {
-        guard !athleteId.isEmpty, !apiBaseURL.isEmpty else { return }
+        guard !apiBaseURL.isEmpty else { return }
 
         do {
-            var request = URLRequest(url: try url("\(apiBaseURL)/athletes/\(athleteId)/sessions"))
+            var request = URLRequest(url: try url("\(apiBaseURL)/sessions"))
             request.httpMethod = "GET"
+            request.setValue("Bearer \(try accessToken())", forHTTPHeaderField: "Authorization")
             let (data, response) = try await URLSession.shared.data(for: request)
             try validate(response: response)
 
@@ -382,6 +390,13 @@ final class PhoneSyncManager: NSObject, ObservableObject, WCSessionDelegate {
         } catch {
             lastStatus = "History refresh failed: \(error.localizedDescription)"
         }
+    }
+
+    private func accessToken() throws -> String {
+        let token = UserDefaults.standard.string(forKey: authTokenKey)?
+            .trimmingCharacters(in: .whitespacesAndNewlines) ?? ""
+        guard !token.isEmpty else { throw SyncError.missingAuthToken }
+        return token
     }
 
     private func upsertLocalSession(from payload: WatchSessionUploadPayload) {
@@ -534,12 +549,14 @@ private enum SyncError: LocalizedError {
     case invalidURL
     case invalidResponse
     case httpStatus(Int)
+    case missingAuthToken
 
     var errorDescription: String? {
         switch self {
         case .invalidURL: return "Invalid backend URL"
         case .invalidResponse: return "Invalid network response"
         case .httpStatus(let code): return "Server returned \(code)"
+        case .missingAuthToken: return "Sign in required to sync sessions"
         }
     }
 }

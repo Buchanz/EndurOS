@@ -12,6 +12,7 @@ import PhotosUI
 
 struct ContentView: View {
     @EnvironmentObject private var sync: PhoneSyncManager
+    @EnvironmentObject private var auth: AuthSessionManager
 
     private enum UnitSystem: CaseIterable {
         case metric
@@ -25,7 +26,7 @@ struct ContentView: View {
         }
     }
 
-    private enum PaceUnit: CaseIterable {
+private enum PaceUnit: CaseIterable {
         case perKm
         case perMile
 
@@ -37,7 +38,7 @@ struct ContentView: View {
         }
     }
 
-    @State private var selectedTab: AppTab = .home
+    @State private var selectedTab: AppTab = .sports
     @State private var showingProfile = false
     @State private var selectedPhotoItem: PhotosPickerItem?
 
@@ -80,15 +81,6 @@ struct ContentView: View {
     var body: some View {
         TabView(selection: $selectedTab) {
             NavigationStack {
-                homeContent
-                    .navigationTitle("")
-                    .navigationBarTitleDisplayMode(.inline)
-                    .toolbar { navToolbar }
-            }
-            .tabItem { Label("Home", systemImage: "house.fill") }
-            .tag(AppTab.home)
-
-            NavigationStack {
                 sportsContent
                     .navigationTitle("")
                     .navigationBarTitleDisplayMode(.inline)
@@ -98,12 +90,21 @@ struct ContentView: View {
             .tag(AppTab.sports)
 
             NavigationStack {
+                homeContent
+                    .navigationTitle("")
+                    .navigationBarTitleDisplayMode(.inline)
+                    .toolbar { navToolbar }
+            }
+            .tabItem { Label("Summary", systemImage: "chart.bar.fill") }
+            .tag(AppTab.home)
+
+            NavigationStack {
                 summaryContent
                     .navigationTitle("")
                     .navigationBarTitleDisplayMode(.inline)
                     .toolbar { navToolbar }
             }
-            .tabItem { Label("Summary", systemImage: "clock.arrow.trianglehead.counterclockwise.rotate.90") }
+            .tabItem { Label("History", systemImage: "clock.arrow.trianglehead.counterclockwise.rotate.90") }
             .tag(AppTab.summary)
 
             NavigationStack {
@@ -129,15 +130,6 @@ struct ContentView: View {
         .sheet(isPresented: $showingInviteContacts) {
             inviteContactsSheet
         }
-        .sheet(isPresented: $showingUnitsSheet) {
-            unitsOfMeasureSheet
-        }
-        .sheet(isPresented: $showingPrivacySheet) {
-            privacyDetailsSheet
-        }
-        .sheet(isPresented: $showingHealthSheet) {
-            healthDetailsSheet
-        }
         .onChange(of: selectedPhotoItem) { _, newItem in
             guard let newItem else { return }
             Task {
@@ -157,7 +149,7 @@ struct ContentView: View {
     private var homeContent: some View {
         ScrollView {
             VStack(alignment: .leading, spacing: 14) {
-                pageTitle("Home")
+                pageTitle("Summary")
                 progressionTrackerCard
                 sessionsOverviewCard
             }
@@ -186,7 +178,7 @@ struct ContentView: View {
     private var summaryContent: some View {
         ScrollView {
             VStack(alignment: .leading, spacing: 14) {
-                pageTitle("Summary")
+                pageTitle("History")
                 summarySportFilterCarousel
                 if groupedSummarySessionsByMonth.isEmpty {
                     emptyState
@@ -427,7 +419,7 @@ struct ContentView: View {
             Image(systemName: "magnifyingglass")
                 .foregroundStyle(.secondary)
 
-            TextField("Search sessions, sport, date", text: $searchText)
+            TextField("Search", text: $searchText)
                 .textInputAutocapitalization(.never)
                 .autocorrectionDisabled()
                 .focused($isSearchFieldFocused)
@@ -444,7 +436,7 @@ struct ContentView: View {
         }
         .padding(.horizontal, 12)
         .padding(.vertical, 10)
-        .background(.regularMaterial, in: Capsule())
+        .background(.ultraThinMaterial, in: Capsule())
     }
 
     private func pageTitle(_ title: String) -> some View {
@@ -521,14 +513,12 @@ struct ContentView: View {
     }
 
     private var progressionTrackerCard: some View {
-        let goals = GoalProgress.values(
-            sessionsCurrent: weeklySessionCount,
-            sessionsGoal: 5,
-            distanceCurrent: weeklyDistanceKm,
-            distanceGoal: 25,
-            caloriesCurrent: weeklyActiveCalories,
-            caloriesGoal: 3000
-        )
+        let sprintGoal = 30.0
+        let speedGoal = 30.0
+        let sessionsGoal = 5.0
+        let sprintProgress = GoalProgress(current: Double(weeklySprints), goal: sprintGoal)
+        let speedProgress = GoalProgress(current: weeklyTopSpeedKmh, goal: speedGoal)
+        let sessionsProgress = GoalProgress(current: Double(weeklySessionCount), goal: sessionsGoal)
         return VStack(alignment: .leading, spacing: 14) {
             Text("Goal Progression")
                 .font(.headline.weight(.semibold))
@@ -537,18 +527,18 @@ struct ContentView: View {
             HStack(spacing: 40) {
                 Spacer(minLength: 0)
                 ringCluster(
-                    moveProgress: goals.calories.progress,
-                    exerciseProgress: goals.distance.progress,
-                    standProgress: Double(goals.sessions.current) / Double(max(goals.sessions.goal, 1))
+                    moveProgress: sprintProgress.progress,
+                    exerciseProgress: speedProgress.progress,
+                    standProgress: sessionsProgress.progress
                 )
                 .frame(width: 142, height: 142)
 
                 VStack(alignment: .leading, spacing: 0) {
-                    ringLegendRow("Calories", "\(Int(goals.calories.current))/\(Int(goals.calories.goal))", color: .purple)
+                    ringLegendRow("Sprints", "\(weeklySprints)/\(Int(sprintGoal))", color: .purple)
                     Spacer(minLength: 0)
-                    ringLegendRow("Distance", String(format: "%.1f/%.0f km", goals.distance.current, goals.distance.goal), color: .indigo)
+                    ringLegendRow("Top Speed", String(format: "%.1f/%.0f km/h", weeklyTopSpeedKmh, speedGoal), color: .indigo)
                     Spacer(minLength: 0)
-                    ringLegendRow("Sessions", "\(goals.sessions.current)/\(goals.sessions.goal)", color: .blue)
+                    ringLegendRow("Sessions", "\(weeklySessionCount)/\(Int(sessionsGoal))", color: .blue)
                 }
                 .frame(width: 170, height: 132, alignment: .leading)
             }
@@ -692,38 +682,97 @@ struct ContentView: View {
     }
 
     private var sessionsOverviewCard: some View {
-        VStack(alignment: .leading, spacing: 10) {
-            HStack {
-                Text("Sessions")
-                    .font(.title2.weight(.bold))
-                    .foregroundStyle(.white)
-
-                Spacer()
-
-                NavigationLink {
-                    sessionsHistoryView
-                } label: {
-                    Image(systemName: "chevron.right.circle.fill")
-                        .font(.title3)
-                        .foregroundStyle(.secondary)
-                }
-                .buttonStyle(.plain)
+        LazyVGrid(
+            columns: [
+                GridItem(.flexible(), spacing: 10),
+                GridItem(.flexible(), spacing: 10)
+            ],
+            spacing: 10
+        ) {
+            NavigationLink {
+                sessionsHistoryView
+            } label: {
+                summarySquareCard(
+                    title: "Sessions",
+                    icon: visibleSessions.first.map { iconForNormalizedSport(normalizeSportName($0.sport)) } ?? "figure.run",
+                    primary: "\(visibleSessions.count)",
+                    secondary: "Total"
+                )
             }
+            .buttonStyle(.plain)
 
-            if let recent = visibleSessions.first {
-                NavigationLink {
-                    workoutSessionDetailView(recent)
-                } label: {
-                    sessionHighlightTile(recent)
-                }
-                .buttonStyle(.plain)
-            } else {
-                emptyState
-            }
+            summarySquareCard(
+                title: "Awards",
+                icon: "medal.star.fill",
+                primary: "\(max(0, visibleSessions.count / 10))",
+                secondary: "Unlocked"
+            )
+
+            summarySquareCard(
+                title: "Distance",
+                icon: "location.fill",
+                primary: String(format: "%.1f km", weeklyDistanceKm),
+                secondary: "This Week"
+            )
+
+            summarySquareCard(
+                title: "Calories",
+                icon: "flame.fill",
+                primary: "\(Int(weeklyActiveCalories))",
+                secondary: "This Week"
+            )
         }
-        .frame(maxWidth: .infinity, alignment: .leading)
-        .padding(14)
-        .background(summaryContainer, in: RoundedRectangle(cornerRadius: 22, style: .continuous))
+    }
+
+    private func summarySquareCard(
+        title: String,
+        icon: String,
+        primary: String,
+        secondary: String,
+        showsArrow: Bool = true
+    ) -> some View {
+        VStack(alignment: .leading, spacing: 10) {
+            HStack(alignment: .top) {
+                Text(title)
+                    .font(.title3.weight(.bold))
+                    .foregroundStyle(.white)
+                Spacer()
+                if showsArrow {
+                    Circle()
+                        .fill(Color.white.opacity(0.10))
+                        .frame(width: 26, height: 26)
+                        .overlay(
+                            Image(systemName: "arrow.up.right")
+                                .font(.system(size: 12, weight: .semibold))
+                                .foregroundStyle(.secondary)
+                        )
+                }
+            }
+            .frame(maxWidth: .infinity, alignment: .topLeading)
+
+            Circle()
+                .fill(accent.opacity(0.2))
+                .frame(width: 40, height: 40)
+                .overlay(
+                    Image(systemName: icon)
+                        .font(.headline.weight(.semibold))
+                        .foregroundStyle(accent)
+                )
+
+            Text(primary)
+                .font(.title2.weight(.bold))
+                .foregroundStyle(accent)
+                .lineLimit(1)
+                .minimumScaleFactor(0.7)
+
+            Text(secondary)
+                .font(.caption)
+                .foregroundStyle(mutedText)
+        }
+        .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .leading)
+        .padding(12)
+        .background(summaryContainer, in: RoundedRectangle(cornerRadius: 20, style: .continuous))
+        .aspectRatio(1, contentMode: .fit)
     }
 
     private var sessionsHistoryView: some View {
@@ -1027,14 +1076,19 @@ struct ContentView: View {
                     } else {
                         VStack(spacing: 8) {
                             ForEach(sessions) { session in
-                                sessionCard(session, showShare: false)
+                                NavigationLink {
+                                    workoutSessionDetailView(session)
+                                } label: {
+                                    historyRow(session)
+                                }
+                                .buttonStyle(.plain)
                             }
                         }
                     }
                 }
                 .padding()
             }
-            .background(background.ignoresSafeArea())
+            .background(detailContainer.ignoresSafeArea())
             .navigationTitle(item.sport)
             .navigationBarTitleDisplayMode(.large)
             .toolbar {
@@ -1063,7 +1117,7 @@ struct ContentView: View {
     }
 
     private var profileSheet: some View {
-        let pageBackground = Color(red: 0.09, green: 0.10, blue: 0.12)
+        let pageBackground = detailContainer
         let cardBackground = Color(red: 0.18, green: 0.19, blue: 0.22)
 
         return ScrollView {
@@ -1119,12 +1173,34 @@ struct ContentView: View {
                     }
                 }
                 .background(cardBackground, in: RoundedRectangle(cornerRadius: 16, style: .continuous))
+
+                Button {
+                    auth.signOut()
+                    showingProfile = false
+                } label: {
+                    Text("Sign Out")
+                        .font(.headline.weight(.semibold))
+                        .foregroundStyle(.red.opacity(0.95))
+                        .frame(maxWidth: .infinity)
+                        .padding(.vertical, 14)
+                }
+                .buttonStyle(.plain)
+                .background(cardBackground, in: RoundedRectangle(cornerRadius: 16, style: .continuous))
             }
             .padding(.horizontal, 16)
             .padding(.top, 20)
             .padding(.bottom, 24)
         }
         .background(pageBackground.ignoresSafeArea())
+        .sheet(isPresented: $showingUnitsSheet) {
+            unitsOfMeasureSheet
+        }
+        .sheet(isPresented: $showingPrivacySheet) {
+            privacyDetailsSheet
+        }
+        .sheet(isPresented: $showingHealthSheet) {
+            healthDetailsSheet
+        }
         .preferredColorScheme(.dark)
     }
 
@@ -1205,7 +1281,7 @@ struct ContentView: View {
                 }
             }
             .scrollContentBackground(.hidden)
-            .background(background)
+            .background(detailContainer)
             .navigationTitle("Units of Measure")
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {
@@ -1228,7 +1304,7 @@ struct ContentView: View {
                 }
             }
             .scrollContentBackground(.hidden)
-            .background(background)
+            .background(detailContainer)
             .navigationTitle("Privacy")
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {
@@ -1251,7 +1327,7 @@ struct ContentView: View {
                 }
             }
             .scrollContentBackground(.hidden)
-            .background(background)
+            .background(detailContainer)
             .navigationTitle("Health Details")
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {
@@ -1339,6 +1415,17 @@ struct ContentView: View {
     private var weeklyActiveCalories: Double {
         sessionsInLast(days: 7).reduce(0) { $0 + $1.activeCalories }
     }
+
+    private var weeklySprints: Int {
+        sessionsInLast(days: 7).reduce(into: 0) { result, session in
+            result += session.sprintCount ?? 0
+        }
+    }
+
+    private var weeklyTopSpeedKmh: Double {
+        sessionsInLast(days: 7).map(\.maxSpeedKmh).max() ?? 0
+    }
+
 
     private var groupedSessionsByMonth: [(month: String, sessions: [BackendSession])] {
         let formatter = DateFormatter()
@@ -1563,7 +1650,7 @@ struct ContentView: View {
                 }
             }
             .padding()
-            .background(background.ignoresSafeArea())
+            .background(detailContainer.ignoresSafeArea())
             .navigationTitle("Invite Friends")
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {
@@ -1665,7 +1752,7 @@ struct ContentView: View {
         }
         .frame(maxWidth: .infinity, alignment: .leading)
         .padding(14)
-        .background(surface, in: RoundedRectangle(cornerRadius: 14, style: .continuous))
+        .background(summaryContainer, in: RoundedRectangle(cornerRadius: 14, style: .continuous))
     }
 }
 
@@ -1774,4 +1861,5 @@ private extension ISO8601DateFormatter {
 #Preview {
     ContentView()
         .environmentObject(PhoneSyncManager())
+        .environmentObject(AuthSessionManager())
 }

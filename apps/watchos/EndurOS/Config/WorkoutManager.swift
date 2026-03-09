@@ -107,6 +107,7 @@ final class WorkoutManager: NSObject, ObservableObject {
 
     private var session: HKWorkoutSession?
     private var builder: HKLiveWorkoutBuilder?
+    private var healthKitAvailable = HKHealthStore.isHealthDataAvailable()
 
     // MARK: - Timing
 
@@ -173,9 +174,12 @@ final class WorkoutManager: NSObject, ObservableObject {
     /// Call once (e.g., onAppear) before starting.
     func requestAuthorization() async {
         guard HKHealthStore.isHealthDataAvailable() else {
-            runState = .error("Health data not available")
+            // Keep app usable without HealthKit session support.
+            healthKitAvailable = false
+            location.requestPermission()
             return
         }
+        healthKitAvailable = true
 
         let toShare: Set<HKSampleType> = [HKObjectType.workoutType()]
         let toRead: Set<HKObjectType> = []
@@ -183,7 +187,8 @@ final class WorkoutManager: NSObject, ObservableObject {
         do {
             try await healthStore.requestAuthorization(toShare: toShare, read: toRead)
         } catch {
-            runState = .error("Health authorization failed")
+            // Continue with GPS-only session mode if authorization fails.
+            healthKitAvailable = false
         }
 
         // Location permission is handled by LocationManager
@@ -208,14 +213,20 @@ final class WorkoutManager: NSObject, ObservableObject {
         routePoints = []
         lastSaveErrorMessage = nil
 
-        do {
-            try startWorkoutSession()
-            runState = .running
-            location.beginWorkoutTracking()
-            startTicking()
-        } catch {
-            runState = .error("Failed to start workout")
+        if healthKitAvailable {
+            do {
+                try startWorkoutSession()
+            } catch {
+                // Fall back to non-HealthKit mode, but keep workout active in UI.
+                session = nil
+                builder = nil
+                healthKitAvailable = false
+            }
         }
+
+        runState = .running
+        location.beginWorkoutTracking()
+        startTicking()
     }
 
     func pause() {

@@ -2,7 +2,7 @@ import { z } from "zod";
 
 export const sessionSummarySchema = z.object({
   sessionId: z.string().uuid().optional(),
-  athleteId: z.string().uuid(),
+  athleteId: z.string().uuid().optional(),
   sport: z.string().min(1),
   startedAt: z.string().datetime(),
   endedAt: z.string().datetime(),

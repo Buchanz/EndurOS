@@ -54,7 +54,7 @@ struct ContentView: View {
                         countdownView(sport: sport, value: countdownValue)
                             .id("countdown-\(sport.id)")
                             .transition(.asymmetric(insertion: pageTransitionIn, removal: pageTransitionOut))
-                    } else if workout.runState == .idle {
+                    } else if !isShowingSessionPages {
                         sportSelectionView
                             .id("sports")
                             .transition(.asymmetric(insertion: pageTransitionIn, removal: pageTransitionOut))
@@ -120,9 +120,18 @@ struct ContentView: View {
     private var topHeaderTitle: String {
         if summary != nil { return "Summary" }
         if let pendingSport { return pendingSport.displayName }
-        if workout.runState == .idle { return "Sports" }
+        if !isShowingSessionPages { return "Sports" }
         if sessionPage == 0, let activeTrackedSectionTitle { return activeTrackedSectionTitle }
         return workout.selectedSport?.displayName ?? "Workout"
+    }
+
+    private var isShowingSessionPages: Bool {
+        switch workout.runState {
+        case .running, .paused:
+            return true
+        default:
+            return false
+        }
     }
 
     private var sportSelectionView: some View {
@@ -277,6 +286,9 @@ struct ContentView: View {
                     countdownValue = nil
                     countdownProgress = 1
                 }
+            }
+            await workout.requestAuthorization()
+            await MainActor.run {
                 workout.start(sport: sport)
             }
         }

@@ -1,5 +1,6 @@
 import { randomUUID } from "node:crypto";
 import { Router } from "express";
+import { requireAuth } from "../middleware/auth.js";
 import { supabase } from "../config/supabase.js";
 import {
   sessionSamplesPayloadSchema,
@@ -9,6 +10,7 @@ import {
 } from "../types/session.js";
 
 export const sessionsRouter = Router();
+sessionsRouter.use(requireAuth);
 
 sessionsRouter.post("/sessions", async (req, res) => {
   const parsed = sessionSummarySchema.safeParse(req.body);
@@ -18,11 +20,20 @@ sessionsRouter.post("/sessions", async (req, res) => {
 
   const input: SessionSummaryInput = parsed.data;
   const id = input.sessionId ?? randomUUID();
+  const athleteId = res.locals.authUser?.id;
+  if (!athleteId) {
+    return res.status(401).json({ error: "Unauthorized" });
+  }
+  const authUser = res.locals.authUser;
+  const athleteEnsure = await ensureAthleteExists(athleteId, authUser?.name, authUser?.email);
+  if (athleteEnsure) {
+    return res.status(500).json({ error: "Failed to sync athlete profile", details: athleteEnsure });
+  }
 
   const { error } = await supabase.from("sessions").upsert(
     {
       id,
-      athlete_id: input.athleteId,
+      athlete_id: athleteId,
       sport: input.sport,
       started_at: input.startedAt,
       ended_at: input.endedAt,
@@ -51,10 +62,29 @@ sessionsRouter.post("/sessions", async (req, res) => {
 
 sessionsRouter.post("/sessions/:sessionId/samples", async (req, res) => {
   const { sessionId } = req.params;
+  const athleteId = res.locals.authUser?.id;
+  if (!athleteId) {
+    return res.status(401).json({ error: "Unauthorized" });
+  }
+
   const parsed = sessionSamplesPayloadSchema.safeParse(req.body);
 
   if (!parsed.success) {
     return res.status(400).json({ error: "Invalid payload", details: parsed.error.flatten() });
+  }
+
+  const { data: ownedSession, error: ownedSessionError } = await supabase
+    .from("sessions")
+    .select("id")
+    .eq("id", sessionId)
+    .eq("athlete_id", athleteId)
+    .maybeSingle();
+
+  if (ownedSessionError) {
+    return res.status(500).json({ error: "Failed to verify session ownership", details: ownedSessionError.message });
+  }
+  if (!ownedSession) {
+    return res.status(404).json({ error: "Session not found for current user" });
   }
 
   const rows = parsed.data.samples.map((s: SessionSampleInput) => ({
@@ -75,8 +105,11 @@ sessionsRouter.post("/sessions/:sessionId/samples", async (req, res) => {
   return res.status(201).json({ inserted: rows.length });
 });
 
-sessionsRouter.get("/athletes/:athleteId/sessions", async (req, res) => {
-  const { athleteId } = req.params;
+sessionsRouter.get("/sessions", async (req, res) => {
+  const athleteId = res.locals.authUser?.id;
+  if (!athleteId) {
+    return res.status(401).json({ error: "Unauthorized" });
+  }
 
   const { data, error } = await supabase
     .from("sessions")
@@ -91,3 +124,21 @@ sessionsRouter.get("/athletes/:athleteId/sessions", async (req, res) => {
 
   return res.json({ sessions: data });
 });
+
+async function ensureAthleteExists(athleteId: string, displayName?: string, email?: string) {
+  const firstName = displayName?.split(" ").find(Boolean) ?? null;
+  const lastNameParts = displayName?.split(" ").slice(1).filter(Boolean) ?? [];
+  const lastName = lastNameParts.length > 0 ? lastNameParts.join(" ") : null;
+
+  const { error } = await supabase.from("athletes").upsert(
+    {
+      id: athleteId,
+      external_ref: email ?? athleteId,
+      first_name: firstName,
+      last_name: lastName
+    },
+    { onConflict: "id" }
+  );
+
+  return error?.message;
+}
