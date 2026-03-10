@@ -260,11 +260,6 @@ private enum PaceUnit: CaseIterable {
                     }
                 }
 
-                Text("See how your data is managed...")
-                    .font(.footnote)
-                    .foregroundStyle(.indigo)
-                    .padding(.top, 12)
-                    .frame(maxWidth: .infinity, alignment: .center)
             }
             .padding()
             .padding(.bottom, 20)

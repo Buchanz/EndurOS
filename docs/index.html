@@ -3,68 +3,250 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width,initial-scale=1" />
-    <title>EndurOS Auth Redirect</title>
+    <title>EndurOS</title>
+    <meta
+      name="description"
+      content="EndurOS is a companion sports tracking platform for athletes and coaches, built for watch-to-phone performance workflows."
+    />
     <style>
       :root {
         color-scheme: dark;
+        --bg-0: #0f1016;
+        --bg-1: #1f2340;
+        --card: rgba(255, 255, 255, 0.06);
+        --card-stroke: rgba(255, 255, 255, 0.1);
+        --text: #f5f5f7;
+        --muted: rgba(245, 245, 247, 0.74);
+        --indigo: #6366f1;
       }
+
+      * {
+        box-sizing: border-box;
+      }
+
       body {
         margin: 0;
         min-height: 100vh;
-        display: grid;
-        place-items: center;
-        background: radial-gradient(circle at top, #1f2340, #0f1016 55%);
-        color: #f5f5f7;
+        background: radial-gradient(circle at top, var(--bg-1), var(--bg-0) 55%);
+        color: var(--text);
         font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", "Segoe UI", sans-serif;
+        overflow: hidden;
       }
-      .card {
+
+      .container {
+        width: min(960px, 92vw);
+        margin: 0 auto;
+      }
+
+      .site {
+        display: none;
+        min-height: 100vh;
+        padding: 20px 0 24px;
+      }
+
+      .nav {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 12px;
+        margin-bottom: 48px;
+      }
+
+      .site .container {
+        min-height: calc(100vh - 44px);
+        display: flex;
+        flex-direction: column;
+      }
+
+      .brand {
+        font-size: 1.1rem;
+        font-weight: 700;
+        letter-spacing: 0.02em;
+      }
+
+      .dot {
+        color: var(--indigo);
+      }
+
+      .hero {
+        display: grid;
+        grid-template-columns: minmax(0, 1fr) minmax(280px, 420px);
+        gap: 22px;
+        align-items: center;
+        margin-top: auto;
+        margin-bottom: auto;
+      }
+
+      .hero-copy {
+        display: grid;
+        gap: 18px;
+      }
+
+      .hero-image {
+        width: 100%;
+        max-width: 190px;
+        justify-self: end;
+        border-radius: 18px;
+      }
+
+      h1 {
+        margin: 0;
+        font-size: clamp(1.7rem, 4.4vw, 3rem);
+        line-height: 1.05;
+      }
+
+      .lead {
+        margin: 0;
+        max-width: 62ch;
+        color: var(--muted);
+        font-size: clamp(0.92rem, 1.5vw, 1.05rem);
+      }
+
+      .actions {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 10px;
+      }
+
+      .btn {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 6px;
+        border: 1px solid rgba(255, 255, 255, 0.22);
+        border-radius: 999px;
+        padding: 11px 16px;
+        font-weight: 600;
+        text-decoration: none;
+        color: var(--text);
+        background: rgba(255, 255, 255, 0.1);
+        backdrop-filter: blur(16px) saturate(120%);
+        -webkit-backdrop-filter: blur(16px) saturate(120%);
+        box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.18);
+      }
+
+      .btn.primary {
+        background: rgba(99, 102, 241, 0.36);
+        border-color: rgba(132, 135, 255, 0.48);
+        color: #fff;
+      }
+
+      .verify {
+        display: none;
+        min-height: 100vh;
+        place-items: center;
+        padding: 24px 0;
+      }
+
+      .verify-card {
         width: min(520px, 92vw);
         padding: 28px;
         border-radius: 20px;
-        background: rgba(255, 255, 255, 0.06);
-        border: 1px solid rgba(255, 255, 255, 0.1);
+        background: var(--card);
+        border: 1px solid var(--card-stroke);
         box-shadow: 0 30px 60px rgba(0, 0, 0, 0.35);
       }
-      h1 {
+
+      .verify-card h2 {
         margin: 0 0 10px;
         font-size: clamp(1.5rem, 3vw, 2rem);
       }
-      p {
-        margin: 0;
-        color: rgba(245, 245, 247, 0.82);
-        line-height: 1.5;
-      }
+
       .ok {
-        color: #6366f1;
+        margin: 0;
+        color: var(--indigo);
         font-weight: 700;
       }
+
+      .msg {
+        margin: 8px 0 0;
+        color: var(--muted);
+        line-height: 1.5;
+      }
+
       .small {
         margin-top: 14px;
         font-size: 0.9rem;
         color: rgba(245, 245, 247, 0.6);
       }
-      code {
-        color: #b7c3ff;
+
+      @media (max-width: 760px) {
+        body {
+          overflow: auto;
+        }
+
+        .hero {
+          grid-template-columns: 1fr;
+          margin-top: 16px;
+          margin-bottom: 0;
+        }
+
+        .hero-image {
+          justify-self: stretch;
+          max-width: none;
+        }
       }
     </style>
   </head>
   <body>
-    <main class="card">
-      <h1>EndurOS</h1>
-      <p class="ok" id="status">Email verification complete.</p>
-      <p id="message">You can return to the EndurOS app and log in.</p>
-      <p class="small">If this page was opened by mistake, you can close it safely.</p>
+    <main id="site" class="site">
+      <div class="container">
+        <header class="nav">
+          <div class="brand">EndurOS<span class="dot">.</span></div>
+        </header>
+
+        <section class="hero">
+          <div class="hero-copy">
+            <h1>Sports tracking, simplified.</h1>
+            <p class="lead">
+              EndurOS is a watchOS GPS tracker that delivers sports performance data without the external hardware.
+            </p>
+            <div class="actions">
+              <a class="btn primary" href="#">Join Beta</a>
+              <a class="btn" href="https://github.com/Buchanz/EndurOS" target="_blank" rel="noreferrer">View Project</a>
+            </div>
+          </div>
+          <img class="hero-image" src="./assets/EndurOS-Image.png" alt="EndurOS app preview" />
+        </section>
+      </div>
     </main>
+
+    <section id="verify" class="verify" aria-live="polite">
+      <div class="verify-card">
+        <h2>EndurOS</h2>
+        <p id="status" class="ok">Email verification complete.</p>
+        <p id="message" class="msg">You can return to the EndurOS app and log in.</p>
+        <p class="small">If this page was opened by mistake, you can close it safely.</p>
+      </div>
+    </section>
 
     <script>
       const hash = window.location.hash || "";
       const params = new URLSearchParams(hash.startsWith("#") ? hash.slice(1) : hash);
-      const error = params.get("error_description") || params.get("error");
+      const hasAuthHash =
+        params.has("access_token") ||
+        params.has("refresh_token") ||
+        params.has("type") ||
+        params.has("error") ||
+        params.has("error_description");
 
+      const site = document.getElementById("site");
+      const verify = document.getElementById("verify");
+
+      if (hasAuthHash) {
+        verify.style.display = "grid";
+      } else {
+        site.style.display = "block";
+      }
+
+      const error = params.get("error_description") || params.get("error");
       if (error) {
-        document.getElementById("status").textContent = "Verification link had an issue.";
-        document.getElementById("status").classList.remove("ok");
-        document.getElementById("message").textContent = decodeURIComponent(error);
+        const status = document.getElementById("status");
+        const message = document.getElementById("message");
+        status.textContent = "Verification link had an issue.";
+        status.classList.remove("ok");
+        status.style.color = "#ff7d7d";
+        message.textContent = decodeURIComponent(error);
       }
     </script>
   </body>
